@@ -39,7 +39,7 @@ namespace DebugDiag.DumpAnalyzer
                             if (IsDefaultRuleName(rule))
                                 AddDefaultRule(_defaultAssembly, rule);
                             else
-                                ErrorHandler.ReportError(String.Format("No assembly was specified for rule {0}, the rule will not be executed.", rule));
+                                Logger.ReportError(String.Format("No assembly was specified for rule {0}, the rule will not be executed.", rule));
                         }
                         if (_analysisRuleInfos.Count > 0)
                             _assemblies.Add(new RuleModule(_defaultAssembly,true));
@@ -70,7 +70,7 @@ namespace DebugDiag.DumpAnalyzer
                 {
                     string assemblyName = FindAssemblyForRule(rule, AssemblyNames);
                     if (string.IsNullOrEmpty(assemblyName))
-                        ErrorHandler.ReportError(String.Format("No assembly was found that contains a valid DebugDiag rule {0}, this rule will not be executed.", rule));
+                        Logger.ReportError(String.Format("No assembly was found that contains a valid DebugDiag rule {0}, this rule will not be executed.", rule));
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace DebugDiag.DumpAnalyzer
                         return asmbly.Module.Location;
                     }
                     else
-                        ErrorHandler.PrintWarning("A Type that matches a rule name was found on Assembly {1} but could not be loaded because is not a valid Debugdiag Rule\r\n\tType:\t{0}", rule, asmbly.Module.Location);
+                        Logger.PrintWarning("A Type that matches a rule name was found on Assembly {1} but could not be loaded because is not a valid Debugdiag Rule\r\n\tType:\t{0}", rule, asmbly.Module.Location);
                 }
             }
 
@@ -118,22 +118,22 @@ namespace DebugDiag.DumpAnalyzer
                 }
                 catch (FileLoadException ex)
                 {
-                    ErrorHandler.PrintExceptionError("Failed to load {0}, rules in this assembly will not be executed", assemblyName, ex.ToString());
+                    Logger.PrintExceptionError("Failed to load {0}, rules in this assembly will not be executed", assemblyName, ex.ToString());
                     _removeAssembly.Add(assemblyName);
                 }
                 catch (BadImageFormatException ex)
                 {
-                    ErrorHandler.PrintExceptionError("Failed to load {0}, rules in this assembly will not be executed", assemblyName, ex.ToString());
+                    Logger.PrintExceptionError("Failed to load {0}, rules in this assembly will not be executed", assemblyName, ex.ToString());
                     _removeAssembly.Add(assemblyName);
                 }
                 catch (FileNotFoundException ex)
                 {
-                    ErrorHandler.PrintExceptionError("File {0} was not found, rules in this assembly will not be executed", assemblyName, ex.ToString());
+                    Logger.PrintExceptionError("File {0} was not found, rules in this assembly will not be executed", assemblyName, ex.ToString());
                     _removeAssembly.Add(assemblyName);
                 }
                 catch (Exception ex)
                 {
-                    ErrorHandler.PrintExceptionError("Unexpected exception loading {0}", assemblyName, ex.ToString());
+                    Logger.PrintExceptionError("Unexpected exception loading {0}", assemblyName, ex.ToString());
                     _removeAssembly.Add(assemblyName);
                 }
             }
@@ -181,7 +181,7 @@ namespace DebugDiag.DumpAnalyzer
             if (ruleType != null)
                 _analysisRuleInfos.Add(new CodeAnalysisRuleInfo(ruleType, null));
             else
-                ErrorHandler.PrintExceptionError("Type could not be loaded\r\n\tType:\t{0}",
+                Logger.PrintExceptionError("Type could not be loaded\r\n\tType:\t{0}",
                     rule, Path.Combine(DDv2InstallDir(), "AnalysisRules", "DebugDiag.AnalysisRules.dll").ToString());
         }
 
@@ -201,11 +201,11 @@ namespace DebugDiag.DumpAnalyzer
                 }
                 catch (FileLoadException ex)
                 {
-                    ErrorHandler.PrintExceptionError("Failed to load {0}, default rules will not be executed", GetDefaultAssemblyFullPath(), ex.ToString());
+                    Logger.PrintExceptionError("Failed to load {0}, default rules will not be executed", GetDefaultAssemblyFullPath(), ex.ToString());
                 }
                 catch (FileNotFoundException ex)
                 {
-                    ErrorHandler.PrintExceptionError("File not found {0}, default rules will not be executed", GetDefaultAssemblyFullPath(), ex.ToString());
+                    Logger.PrintExceptionError("File not found {0}, default rules will not be executed", GetDefaultAssemblyFullPath(), ex.ToString());
                 }
                 return null;
             }
@@ -295,7 +295,7 @@ namespace DebugDiag.DumpAnalyzer
                 {
                     string msg = string.Format("An exception occurred while finding the v2 analysis runtime.\r\n\tKeyPath:  {0}\r\n\tValueName:  {1}\r\n\tMessage:  {2}\r\nStack Trace:\r\n{3}",
                         keyName, regVal, ex.Message, ex.StackTrace);
-                    ErrorHandler.ReportError(msg);
+                    Logger.ReportError(msg);
                 }
             }
 

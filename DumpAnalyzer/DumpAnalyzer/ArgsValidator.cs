@@ -42,7 +42,7 @@ namespace DebugDiag.DumpAnalyzer
             if (_args.Length < 4 || !ParseArguments())
             {
                 // If not enough arguments or the arguments cannot be parsed show the command line options;
-                ErrorHandler.ShowCommandLineOptions();
+                Logger.ShowCommandLineOptions();
                 return false;
             }
             return true; 
@@ -58,6 +58,9 @@ namespace DebugDiag.DumpAnalyzer
                     case "-folder":
                         if (!ValidateDumpFiles(_args[i + 1]))
                             return false;
+                        break;
+                    case "-monitorfolder":
+                        _aj.MonitoredFolder = _args[i+1];
                         break;
                     case "-symbols":
                         _aj.Symbols = _args[i + 1];

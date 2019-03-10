@@ -21,7 +21,7 @@ namespace DebugDiag.DumpAnalyzer
                 {
                     if (!fi.Exists)
                     {
-                        ErrorHandler.ReportError(string.Format("{0} does not exists", pathValue));
+                        Logger.ReportError(string.Format("{0} does not exists", pathValue));
                         return false;
                     }
                 }
@@ -29,22 +29,22 @@ namespace DebugDiag.DumpAnalyzer
             }
             catch (ArgumentException)
             {
-                ErrorHandler.ReportError(string.Format("{0} is not valid.", pathValue));
+                Logger.ReportError(string.Format("{0} is not valid.", pathValue));
                 return false;
             }
             catch (System.IO.PathTooLongException)
             {
-                ErrorHandler.ReportError(string.Format("The name {0} is too long to be parsed, try renaming it", pathValue));
+                Logger.ReportError(string.Format("The name {0} is too long to be parsed, try renaming it", pathValue));
                 return false;
             }
             catch (System.UnauthorizedAccessException)
             {
-                ErrorHandler.ReportError(string.Format("You are not authorized to access {0}", pathValue));
+                Logger.ReportError(string.Format("You are not authorized to access {0}", pathValue));
                 return false;
             }
             catch (NotSupportedException)
             {
-                ErrorHandler.ReportError(string.Format("The path {0} generated an unsupported Exception", pathValue));
+                Logger.ReportError(string.Format("The path {0} generated an unsupported Exception", pathValue));
                 return false;
             }
 

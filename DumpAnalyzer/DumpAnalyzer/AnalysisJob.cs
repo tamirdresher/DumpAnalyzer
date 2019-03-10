@@ -9,7 +9,6 @@ namespace DebugDiag.DumpAnalyzer
 {
     public class AnalysisJob
     {
-        private const string PUBLICSYMBOLS = "srv*c:\\symsrv*http://msdl.microsoft.com/download/symbols";
         private List<string> _dumpFiles = new List<string>();
         private List<string> _assemblyNames = new List<string>();
         private List<AnalysisRuleInfo> _analysisRuleInfos = new List<AnalysisRuleInfo>();
@@ -36,7 +35,7 @@ namespace DebugDiag.DumpAnalyzer
                 _dumpFiles.Add(parsedDumpName);
             else
             {
-                ErrorHandler.ReportError("The following dump file was not be found and will not be analyzed:", parsedDumpName);
+                Logger.ReportError("The following dump file was not be found and will not be analyzed:", parsedDumpName);
                 return false;
             }
             return true;
@@ -46,7 +45,7 @@ namespace DebugDiag.DumpAnalyzer
         { 
             get
             {
-                if (String.IsNullOrEmpty(_symbols)) return PUBLICSYMBOLS;
+                if (String.IsNullOrEmpty(_symbols)) return DumpAnalyzerConfig.PublicSymbols;
                 else return _symbols;
             }
             set
@@ -84,7 +83,7 @@ namespace DebugDiag.DumpAnalyzer
                 _assemblyNames.Add(AssemblyName);
             else
             {
-                ErrorHandler.ReportError("The following Assembly file was not be found and rules based on it will not be executed", AssemblyName);
+                Logger.ReportError("The following Assembly file was not be found and rules based on it will not be executed", AssemblyName);
                 return false;
             }
             return true;
@@ -111,6 +110,6 @@ namespace DebugDiag.DumpAnalyzer
             }
         }
 
-
+        public string MonitoredFolder { get; set; } = "";
     }
 }
