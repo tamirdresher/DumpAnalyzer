@@ -146,6 +146,7 @@
   <ItemGroup>
     <Compile Include="AnalysisJob.cs" />
     <Compile Include="ArgsValidator.cs" />
+    <Compile Include="ConcurrentPriorityQueue.cs" />
     <Compile Include="DumpAnalyzer.cs" />
     <Compile Include="DumpAnalyzerConfig.cs" />
     <Compile Include="DumpFileConsumer.cs" />

@@ -23,21 +23,24 @@ namespace DebugDiag.DumpAnalyzer
         [STAThread]
         static void Main(string[] args)
         {
-            //Console.ReadKey();
             _av = new ArgsValidator(args);
             if (!_av.ValidArguments) return;
             _analysis = _av.GetAnalysisJob;
             var analyzer = new DumpAnalyzer();
             if (!string.IsNullOrEmpty(_analysis.MonitoredFolder))
             {
-                var dumpsCollection = new BlockingCollection<DumpFileInfo>(new ConcurrentQueue<DumpFileInfo>());
+                Logger.PrintTrace("--------- Automatic Dump Analyzer ---------");
+                Logger.PrintTrace($"Monitoring {_analysis.MonitoredFolder} for dump files");
+                var priorites = Enum.GetNames(typeof(DumpPriority)).Length;
+
+                var dumpsCollection = new BlockingCollection<DumpFileInfo>(new ConcurrentPriorityQueue<int,DumpFileInfo>(x=>priorites-(int)x.Priority));
                 var consumer = new DumpFileConsumer(dumpsCollection, _analysis);
                 var watcher = new DumpFileWatcher(_analysis.MonitoredFolder, dumpsCollection);
 
                 var cts=new CancellationTokenSource();
                 Console.CancelKeyPress += (sender, eventArgs) => cts.Cancel();
 
-                consumer.StartAsync(cts.Token);
+                consumer.Start(cts.Token);
             }
             else
             {
